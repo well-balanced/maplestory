@@ -146,4 +146,6 @@ dmypy.json
 # pytype static type analyzer
 .pytype/
 
+# runserver
+run.sh
 # End of https://www.toptal.com/developers/gitignore/api/django
