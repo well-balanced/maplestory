@@ -1,6 +1,7 @@
 from django.urls import path
+from wiki.views import test, testt
 
 urlpatterns = [
-    path('/', )
-    path('/<int:id>')
+    path('', test, ),
+    path('<int:id>/', testt),
 ]
