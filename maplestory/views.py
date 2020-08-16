@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from wiki.models import Term, TermItem
+from wiki.models import Term, TermRevision
 from django.views import View
 
 class Index(View):
