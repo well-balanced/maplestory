@@ -1,5 +1,4 @@
-FROM python:3.6
-rm: remove write-protected regular file 'django-sample-for-docker-compose/.git/oversion: '3'
+version: '3'
 
 services:
   db:
