@@ -30,6 +30,18 @@
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Dropdown
               </a>
+
+            <form action="/terms/write" method="post">
+                {% csrf_token %}
+                <div class="textbox">
+                    <textarea name="term" placeholder="용어"></textarea><br>
+                    <textarea name="description" placeholder="설명"></textarea><br>
+                </div>
+                <div class="submit">
+                    <button type="submit">작성</button>
+                </div>
+            </form>
+
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="#">Action</a>
                 <a class="dropdown-item" href="#">Another action</a>

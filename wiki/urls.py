@@ -1,8 +1,8 @@
 from django.urls import path
-from . import views
+from .views import Write, Detail, Edit
 
 urlpatterns = [
-    path('<int:id>', views.detail, name='detail'),
-    path('write', views.write, name='write'),
-    path('<int:id>/edit', views.edit, name='edit'),
+    path('<int:id>', Detail.as_view(), name='detail'),
+    path('write', Write.as_view(), name='write'),
+    path('<int:id>/edit', Edit.as_view(), name='edit'),
 ]
