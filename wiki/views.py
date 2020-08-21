@@ -4,7 +4,7 @@ from django.views import View
 from wiki.models import Term, TermRevision, TermRelated
 import datetime
 
-class Write(View):
+class WriteView(View):
 
     def get(self, request, *args, **kwargs):
         return render(request, 'wiki/write.html')
@@ -24,7 +24,7 @@ class Write(View):
         term = TermRevision.objects.create(term=term, description=description)
         return redirect('/terms/{}'.format(term.term_id))
 
-class Detail(View):
+class DetailView(View):
 
     def get(self, request, *args, **kwargs):
         try:
@@ -38,10 +38,20 @@ class Detail(View):
             'term_item': term_item,
         })
 
-class Edit(View):
+class EditView(View):
 
     def get(self, request, *args, **kwargs):
-        return render(request, 'wiki/edit.html')
+        page_id = (kwargs.get('id'))
+        get_term = Term.objects.get(id=page_id).name
+        get_description = TermRevision.objects.get(term_id=page_id).description
+        return render(request, 'wiki/edit.html', {
+            'id': page_id,
+            'term': get_term,
+            'description': get_description,
+        })
 
     def post(self, request, *args, **kwargs):
-        return render(request, 'wiki/detail.html')
+        page_id = (kwargs.get('id'))
+        description = request.POST.get('description', '')
+        TermRevision.objects.create(description=description, term_id=page_id)
+        return redirect('/terms/{}'.format(page_id))
