@@ -9,5 +9,5 @@ class TermRevision(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='시간')
 
 class TermRelated(models.Model):
-    term_revision = models.ForeignKey(TermRevision, on_delete=models.CASCADE,)
+    term_revision = models.ForeignKey(TermRevision, on_delete=models.CASCADE)
     term = models.ForeignKey(Term, on_delete=models.CASCADE)
