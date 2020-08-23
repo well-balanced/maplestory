@@ -4,19 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>detail</title>
+    <title>history</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/
-    bootstrap/4.1.2/css/bootstrap.min.css" 
-    integrity="sha384-Smlep5jCw/wG7hdkwQ/
-    Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">    
+    <link rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" 
+    integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+    crossorigin="anonymous">
 </head>
 <body>
-    <p>용어: {{ term.name }}</p>
-    <p>설명: {{ term_item.description }}</p>
-    <a href="{% url 'index' %}">index page</a><br>
-    <a href="{% url 'edit' term.id %}">edit page</a><br>
-    <a href="{% url 'history' term.id %}">history page</a>
+<p>{{ term.name }}<p><br>
+{% for history in history %}
+    <p>{{ forloop.counter }}. {{ history.description }} - {{ history.created_at}}</p><br>
+{% endfor %}
+<a href="{% url 'index' %}">index page</a>
 </body>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
