@@ -15,7 +15,6 @@
   <form action="/terms/{{id}}/edit" method="POST">
     {% csrf_token %}
     <div class="textbox">
-        {% comment %} <textarea name="term" placeholder="용어">{{ term }}</textarea><br> {% endcomment %}
         {{ term }}<br>
         <textarea name="description">{{ description }}</textarea><br>
     </div>
