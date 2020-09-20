@@ -9,9 +9,10 @@ class TermRevision(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='시간')
 
 class TermPointer(models.Model):
-    term_link = models.ForeignKey(Term, on_delete=models.CASCADE)
-    term_revision_link = models.ForeignKey(TermRevision, on_delete=models.CASCADE, blank=True, default='', null=True)
+    term = models.ForeignKey(Term, on_delete=models.CASCADE)
+    term_revision = models.ForeignKey(TermRevision, on_delete=models.CASCADE, blank=True, default='', null=True)
 
 class TermRelated(models.Model):
     term_revision = models.ForeignKey(TermRevision, on_delete=models.CASCADE)
     term = models.ForeignKey(Term, on_delete=models.CASCADE)
+    

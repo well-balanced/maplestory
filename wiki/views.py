@@ -21,7 +21,7 @@ class WriteView(View):
         if not is_created:
             return HttpResponse('이미 존재하는 용어입니다.', status=400)
         term_revision = TermRevision.objects.create(term=term, description=description)
-        test = TermPointer.objects.create(term_link_id=term.id, term_revision_link_id=term_revision.id)
+        test = TermPointer.objects.create(term_id=term.id, term_revision_id=term_revision.id)
         return redirect('/terms/{}'.format(term.id))
 
 class DetailView(View):
@@ -31,8 +31,8 @@ class DetailView(View):
             term = Term.objects.get(id=kwargs.get('id'))
         except Term.DoesNotExist:
             return HttpResponse('존재하지 않는 아이디입니다.', status=404)
-        term_pointer = TermPointer.objects.filter(term_link_id=term.id).get()
-        term_revision = TermRevision.objects.filter(id=term_pointer.term_revision_link_id).get()
+        term_pointer = TermPointer.objects.filter(term_id=term.id).get()
+        term_revision = TermRevision.objects.filter(id=term_pointer.term_revision_id).get()
         return render(request, 'wiki/detail.html', {
             'term': term,
             'term_item': term_revision,
@@ -42,11 +42,11 @@ class EditView(View):
 
     def get(self, request, *args, **kwargs):
         page_id = kwargs.get('id')
-        term = Term.objects.get(id=page_id).name
+        term_name = Term.objects.get(id=page_id).name
         description = TermRevision.objects.filter(term_id=page_id).order_by('-created_at').first().description
         return render(request, 'wiki/edit.html', {
             'id': page_id,
-            'term': term,
+            'term': term_name,
             'description': description,
         })
 
@@ -56,7 +56,7 @@ class EditView(View):
         term_revision = TermRevision.objects.create(description=description, term_id=page_id)
         term_revision.save()
         if term_revision:
-            TermPointer.objects.filter(term_link_id=page_id).update(term_revision_link_id=term_revision.id)
+            TermPointer.objects.filter(term_id=page_id).update(term_revision_id=term_revision.id)
         return redirect('/terms/{}'.format(page_id))
 
 class HistoryView(View):
@@ -67,7 +67,6 @@ class HistoryView(View):
         except Term.DoesNotExist:
             return HttpResponse('존재하지 않는 아이디입니다.', status=404)
         history = TermRevision.objects.filter(term=term).order_by('-created_at')
-        # a = history.values('description', 'id')
         return render(request, 'wiki/history.html', {
             'term': term,
             'history': history,
@@ -76,9 +75,7 @@ class HistoryView(View):
     
     def post(self, request, *args, **kwargs):
         term_id = kwargs.get('id')
-        # term_revision = TermRevision.objects.filter(term_id=term_id).all()
-        # term_pointer = TermPointer.objects.filter(term_link_id=term_id).get()
         post_term_revision_id = request.POST.get('test', '')
         if post_term_revision_id:
-            TermPointer.objects.update(term_revision_link_id=post_term_revision_id)
+            TermPointer.objects.filter(term_id=term_id).update(term_revision_id=post_term_revision_id)
         return redirect('/terms/{}'.format(term_id))
