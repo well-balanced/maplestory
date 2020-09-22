@@ -15,4 +15,3 @@ class TermPointer(models.Model):
 class TermRelated(models.Model):
     term_revision = models.ForeignKey(TermRevision, on_delete=models.CASCADE)
     term = models.ForeignKey(Term, on_delete=models.CASCADE)
-    
