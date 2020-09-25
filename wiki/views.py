@@ -24,6 +24,7 @@ class WriteView(View):
         test = TermPointer.objects.create(term_id=term.id, term_revision_id=term_revision.id)
         return redirect('/terms/{}'.format(term.id))
 
+
 class DetailView(View):
 
     def get(self, request, *args, **kwargs):
@@ -37,6 +38,7 @@ class DetailView(View):
             'term': term,
             'term_item': term_revision,
         })
+
 
 class EditView(View):
 
@@ -57,6 +59,7 @@ class EditView(View):
         term_revision = TermRevision.objects.create(description=description, term_id=page_id)
         TermPointer.objects.filter(term_id=page_id).update(term_revision_id=term_revision.id)
         return redirect('/terms/{}'.format(page_id))
+
 
 class HistoryView(View):
 
