@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
 from wiki.models import Term, TermRevision, TermRelated, TermPointer
@@ -11,7 +11,8 @@ class WriteView(View):
 
     def post(self, request, *args, **kwargs):
         term = request.POST.get('term')
-        description = request.POST.get('description', '')
+        description = request.POST.get('description')
+        test = request.POST.getlist('tag')
 
         if not term and not description:
             return HttpResponse('용어와 설명을 꼭 작성해주세요.', status=400)
@@ -21,7 +22,7 @@ class WriteView(View):
         if not is_created:
             return HttpResponse('이미 존재하는 용어입니다.', status=400)
         term_revision = TermRevision.objects.create(term=term, description=description)
-        test = TermPointer.objects.create(term_id=term.id, term_revision_id=term_revision.id)
+        term_pointer = TermPointer.objects.create(term_id=term.id, term_revision_id=term_revision.id)
         return redirect('/terms/{}'.format(term.id))
 
 
