@@ -6,24 +6,23 @@
 
 {% block content %}
   <form action="/terms/write" method="post">
-    {% csrf_token %}
+  {% csrf_token %}
     <div class="textbox">
       <textarea name="term" placeholder="용어"></textarea><br>
       <textarea name="description" placeholder="설명"></textarea><br>
+    </div>
       <div id='ui-widget'>
-        <input
-         class="form-control"
-         name="tag"
-         maxlength = "15"
-         placeholder="태그 목록"
-         id="text_task"
-         />
-       <button type="submit" id="btn_add_task" class="btn btn-primary">추가</button>
+        <input class="form-control" name="tag" placeholder="태그 목록" id="text_task"/>
+        <button type="button" id="btn_add_task" class="btn btn-primary">추가</button>
       </div>
       <ul id="list_tasks" name="test"></ul>
-    </div>
     <div class="submit">
         <button type="submit">작성</button>
     </div>
   </form>
+  {% comment %} <button type="button" class="btn btn-success btn-lg">GET</button>
+
+  <ul id='seconds'></ul>
+
+  <ul id='right'></ul>  {% endcomment %}
 {% endblock %}
