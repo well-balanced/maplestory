@@ -1,0 +1,18 @@
+{% extends 'wiki/base.html' %}
+
+{% block head %}
+    <title>history</title>
+{% endblock %}
+
+{% block content %}
+    <form action="/terms/{{ term.id }}/history" method="post">
+        {% csrf_token %}
+        <p>{{ term.name }}<p><br>
+        {% for history in histories %}
+            <p>{{ forloop.counter }}. {{ history.description }} - {{ history.created_at}}</p>
+            <button type="submit" name="return_revision" value="{{ history.id }}">되돌리기</button>
+            <br>
+        {% endfor %}
+        <a href="{% url 'index' %}">index page</a>
+    </form>
+{% endblock %}
