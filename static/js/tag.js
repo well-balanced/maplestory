@@ -50,7 +50,6 @@ $("#text_task").keyup(function(e){
             $.ajax({
                 url: '/terms/tag',
                 data: {
-                    'tag': test,
                     'csrfmiddlewaretoken': csrftoken,
                 },
                 type: "POST",
@@ -85,12 +84,12 @@ function clickFunction(e) {
     var newLi = document.createElement('li');
     var removeBtn = document.createElement('button');
     var input = document.createElement('input');
+    var test = document.getElementsByClassName
     input.value = task
     input.name = "tagList"
     input.type = "hidden"
     var element = newLi.appendChild(document.createTextNode(task));
     if (taskBox.value != "" && checkSame.includes(task) == false) {
-        console.log(newLi.innerHTML)  
         $.ajax({
             url: '/terms/tag',
             data: { 

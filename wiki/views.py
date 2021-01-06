@@ -15,6 +15,7 @@ class WriteView(View):
         description = request.POST.get('description')
         term_related = request.POST.get('tagList')
 
+        print(term_related)
         term, is_created = Term.objects.get_or_create(name=term)
 
         if not term and not description:
@@ -25,7 +26,6 @@ class WriteView(View):
 
         term_revision = TermRevision.objects.create(term=term, description=description)
         term_pointer = TermPointer.objects.create(term_id=term.id, term_revision_id=term_revision.id)
-        print(term_related)
 
         if term_related:
             term_related = TermRelated.objects.create(term_id=term.id, term_revision_id=term_revision.id, term_related=term_related)
