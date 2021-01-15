@@ -13,9 +13,8 @@ class WriteView(View):
     def post(self, request, *args, **kwargs):
         term = request.POST.get('term')
         description = request.POST.get('description')
-        term_related = request.POST.get('tagList')
+        term_related = request.POST.getlist('tagList', '')
 
-        print(term_related)
         term, is_created = Term.objects.get_or_create(name=term)
 
         if not term and not description:
@@ -27,8 +26,10 @@ class WriteView(View):
         term_revision = TermRevision.objects.create(term=term, description=description)
         term_pointer = TermPointer.objects.create(term_id=term.id, term_revision_id=term_revision.id)
 
-        if term_related:
+        try:
             term_related = TermRelated.objects.create(term_id=term.id, term_revision_id=term_revision.id, term_related=term_related)
+        except term_related.DoesNotExist:
+            term_related = TermRelated.objects.create(term_id=term.id, term_revision_id=term_revision.id)
 
         return redirect('/terms/{}'.format(term.id))
 
@@ -40,10 +41,11 @@ class DetailView(View):
 
         if not Term.DoesNotExist:
             return HttpResponse('존재하지 않는 아이디입니다', status=404)
-
+    
         term_pointer = TermPointer.objects.get(term_id=term.id)
         term_revision = TermRevision.objects.get(id=term_pointer.term_revision_id)
-        term_related = TermRelated.objects.get(term_id=term.id, term_revision_id=term_pointer.term_revision_id)
+        term_related = TermRelated.objects.get(term_id=term.id, term_revision_id=term_pointer.term_revision_id).term_related
+
         return render(request, 'wiki/detail.html', {
             'term': term,
             'term_item': term_revision,
@@ -81,7 +83,9 @@ class HistoryView(View):
             term = Term.objects.get(id=kwargs.get('id'))
         except Term.DoesNotExist:
             return HttpResponse('존재하지 않는 아이디입니다.', status=404)
+
         revisions = TermRevision.objects.filter(term=term).order_by('-created_at')
+
         return render(request, 'wiki/history.html', {
             'term': term,
             'histories': revisions,
