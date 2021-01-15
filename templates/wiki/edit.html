@@ -17,8 +17,13 @@
       <button type="button" id="btn_add_task" class="btn btn-primary">추가</button>
     </div>
 
-    <ul id="list_tasks" name="test">
-      <li>{{ term_related }}</li>
+    <ul id="list_tasks" name="originalTag">
+      {% comment %} {{ term_related }} {% endcomment %}
+      <li>
+        {{ term_related }}
+        <input type="hidden" value="{{ term_related }}" name="tagList">
+        <button type="button">X</button>
+      </li>
     </ul>
     <div class="submit">
       <button type="submit">작성</button>
