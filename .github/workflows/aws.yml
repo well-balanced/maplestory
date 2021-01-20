@@ -58,5 +58,5 @@ jobs:
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
         service: ms-service
-        cluster: maplestory-cluster
+        cluster: ms-cluster
         wait-for-service-stability: true  
