@@ -23,7 +23,7 @@
       "memoryReservation": null,
       "volumesFrom": [],
       "stopTimeout": null,
-      "image": "414207599053.dkr.ecr.ap-northeast-2.amazonaws.com/showmethatcode:e455b7911b7c9eae30c996fbd0fbc58f17d7e47e",
+      "image": "414207599053.dkr.ecr.ap-northeast-2.amazonaws.com/showmethatcode:latest",
       "startTimeout": null,
       "firelensConfiguration": null,
       "dependsOn": null,
@@ -49,7 +49,7 @@
   "compatibilities": [
     "EC2"
   ],
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:414207599053:task-definition/maplestory-task-definition:4",
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:414207599053:task-definition/maplestory-task-definition:5",
   "family": "maplestory-task-definition",
   "requiresAttributes": [
     {
@@ -77,7 +77,7 @@
   ],
   "networkMode": null,
   "cpu": "512",
-  "revision": 4,
+  "revision": 5,
   "status": "ACTIVE",
   "inferenceAccelerators": null,
   "proxyConfiguration": null,
