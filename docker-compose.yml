@@ -3,7 +3,7 @@ version: "3.3"
 services:
   db:
     image: mysql
-    environment: 
+    environment:
       - MYSQL_DB=showmethatcode
       - MYSQL_USER=admin
       - MYSQL_PASSWORD=xYCBp7t7CSsJxE96zLRV
@@ -13,6 +13,6 @@ services:
     volumes:
       - .:/code
     ports:
-      - "80:8000"
+      - "8000:8000"
     depends_on:
       - db
