@@ -13,6 +13,14 @@
           "protocol": "tcp"
         }
       ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "maple-container-log",
+          "awslogs-region": "us-west-2",
+          "awslogs-stream-prefix": "maple-container-log"
+        }
+      },
       "essential": true
     }
   ],
