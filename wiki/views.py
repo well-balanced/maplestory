@@ -4,6 +4,7 @@ from django.views import View
 from wiki.models import Term, TermRevision, TermRelated, TermPointer
 import datetime
 from time import time
+import json
 
 class WriteView(View):
 
@@ -11,25 +12,38 @@ class WriteView(View):
         return render(request, 'wiki/write.html')
 
     def post(self, request, *args, **kwargs):
-        term = request.POST.get('term')
-        description = request.POST.get('description')
+        term = request.POST.get('term', '')
+        description = request.POST.get('description', '')
         term_related = request.POST.getlist('tagList', '')
 
-        term, is_created = Term.objects.get_or_create(name=term)
+        if term == '':
+            return HttpResponse('용어를 작성해주세요.', status=400)
 
-        if not term and not description:
-            return HttpResponse('용어와 설명을 꼭 작성해주세요.', status=400)
+        term, is_created = Term.objects.get_or_create(name=term)
 
         if not is_created:
             return HttpResponse('이미 존재하는 용어입니다.', status=400)
 
-        term_revision = TermRevision.objects.create(term=term, description=description)
+        # done_check_same = []
+
+        # for i in term_related:
+        #     check_same_term = Term.objects.filter(name=i)
+        #     done_check_same.append(check_same_term)
+
+        #     if not check_same_term:
+        #         not_same_term = Term.objects.get_or_create(name=i)
+        #         revision_term = TermRevision.get_or_create(term_id=not_same_term.id)
+        #         pointer_term = TermPointer.get_or_create(term_id=related_term.id, term_revision_id=revision_term.id)
+        term_revision = TermRevision.objects.create(term_id=term.id, description=description)
         term_pointer = TermPointer.objects.create(term_id=term.id, term_revision_id=term_revision.id)
 
-        try:
-            term_related = TermRelated.objects.create(term_id=term.id, term_revision_id=term_revision.id, term_related=term_related)
-        except term_related.DoesNotExist:
-            term_related = TermRelated.objects.create(term_id=term.id, term_revision_id=term_revision.id)
+        for i in term_related:
+            create_term = Term.objects.get_or_create(name=i)
+            get_term_id = Term.objects.get(name=i).id
+            test_term_revision = TermRevision.objects.create(term_id=get_term_id)
+            test_term_pointer = TermPointer.objects.create(term_id=get_term_id, term_revision_id=test_term_revision.id)
+            test_term_related = TermRelated.objects.create(term_id=get_term_id, term_revision_id=test_term_revision.id)
+            term_related = TermRelated.objects.create(term_id=term.id, term_revision_id=term_revision.id, term_related_id=get_term_id)
 
         return redirect('/terms/{}'.format(term.id))
 
@@ -44,12 +58,13 @@ class DetailView(View):
     
         term_pointer = TermPointer.objects.get(term_id=term.id)
         term_revision = TermRevision.objects.get(id=term_pointer.term_revision_id)
-        term_related = TermRelated.objects.get(term_id=term.id, term_revision_id=term_pointer.term_revision_id).term_related
+        term_related = TermRelated.objects.get(term_id=term.id, term_revision_id=term_pointer.term_revision_id).term_related_id
+        get_term_name = Term.objects.get(pk=term_related).name
 
         return render(request, 'wiki/detail.html', {
             'term': term,
             'term_item': term_revision,
-            'term_related': term_related,
+            'term_related': get_term_name,
         })
 
 
