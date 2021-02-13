@@ -14,7 +14,7 @@ class WriteView(View):
     def post(self, request, *args, **kwargs):
         term = request.POST.get('term', '')
         description = request.POST.get('description', '')
-        term_related = request.POST.getlist('tagList', '')
+        term_related = request.POST.getlist('tagList', [])
 
         if term == '':
             return HttpResponse('용어를 작성해주세요.', status=400)
@@ -83,7 +83,17 @@ class EditView(View):
 
     def post(self, request, *args, **kwargs):
         page_id = kwargs.get('id')
+        term = Term.objects.get(id=page_id)
         description = request.POST.get('description', '')
+        term_related_list = request.POST.getlist('tagList', [])
+        
+        
+        for term_related in term_related_list:
+            new_term, _ = Term.objects.get_or_create(name=term_related)
+            TermRelated.objects.get_or_create(term=term, term_related=new_term)
+
+            # current_term_related_list.term.filter(name=term_related)
+
         term_revision = TermRevision.objects.create(description=description, term_id=page_id)
         TermPointer.objects.filter(term_id=page_id).update(term_revision_id=term_revision.id)
         return redirect('/terms/{}'.format(page_id))
