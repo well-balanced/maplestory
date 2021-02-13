@@ -1,5 +1,5 @@
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from wiki.models import Term, TermRevision, TermRelated, TermPointer
 import datetime
@@ -24,26 +24,19 @@ class WriteView(View):
         if not is_created:
             return HttpResponse('이미 존재하는 용어입니다.', status=400)
 
-        # done_check_same = []
-
-        # for i in term_related:
-        #     check_same_term = Term.objects.filter(name=i)
-        #     done_check_same.append(check_same_term)
-
-        #     if not check_same_term:
-        #         not_same_term = Term.objects.get_or_create(name=i)
-        #         revision_term = TermRevision.get_or_create(term_id=not_same_term.id)
-        #         pointer_term = TermPointer.get_or_create(term_id=related_term.id, term_revision_id=revision_term.id)
         term_revision = TermRevision.objects.create(term_id=term.id, description=description)
         term_pointer = TermPointer.objects.create(term_id=term.id, term_revision_id=term_revision.id)
 
-        for i in term_related:
-            create_term = Term.objects.get_or_create(name=i)
-            get_term_id = Term.objects.get(name=i).id
-            test_term_revision = TermRevision.objects.create(term_id=get_term_id)
-            test_term_pointer = TermPointer.objects.create(term_id=get_term_id, term_revision_id=test_term_revision.id)
-            test_term_related = TermRelated.objects.create(term_id=get_term_id, term_revision_id=test_term_revision.id)
-            term_related = TermRelated.objects.create(term_id=term.id, term_revision_id=term_revision.id, term_related_id=get_term_id)
+        # 연관어 만드는 곳
+        for name in term_related:
+            term_related, _ = Term.objects.get_or_create(name=name)
+            TermRelated.objects.create(term=term, term_related=term_related)
+            # create_term = Term.objects.get_or_create(name=i)
+            # get_term_id = Term.objects.get(name=i).id
+            # test_term_revision = TermRevision.objects.create(term_id=get_term_id)
+            # test_term_pointer = TermPointer.objects.create(term_id=get_term_id, term_revision_id=test_term_revision.id)
+            # term_related = TermRelated.objects.create(term_id=term.id, term_related_id=get_term_id)
+            # test_term_related = TermRelated.objects.create(term_id=get_term_id)
 
         return redirect('/terms/{}'.format(term.id))
 
@@ -51,20 +44,28 @@ class WriteView(View):
 class DetailView(View):
 
     def get(self, request, *args, **kwargs):
-        term = Term.objects.get(id=kwargs.get('id'))
+        term_id = kwargs.get('id')
+        term = get_object_or_404(Term, id=term_id)
 
-        if not Term.DoesNotExist:
-            return HttpResponse('존재하지 않는 아이디입니다', status=404)
-    
-        term_pointer = TermPointer.objects.get(term_id=term.id)
-        term_revision = TermRevision.objects.get(id=term_pointer.term_revision_id)
-        term_related = TermRelated.objects.get(term_id=term.id, term_revision_id=term_pointer.term_revision_id).term_related_id
-        get_term_name = Term.objects.get(pk=term_related).name
+        try:
+            term_pointer = TermPointer.objects.get(term_id=term.id)
+        except TermPointer.DoesNotExist:
+            term_pointer = None
+        
+        if term_pointer:
+            try:
+                term_revision = TermRevision.objects.get(id=term_pointer.term_revision_id)
+            except TermRevision.DoesNotExist:
+                term_revision = None
+        else:
+            term_revision = None
+
+        term_related_list = TermRelated.objects.filter(term_id=term.id)
 
         return render(request, 'wiki/detail.html', {
             'term': term,
-            'term_item': term_revision,
-            'term_related': get_term_name,
+            'term_revision': term_revision,
+            'term_related_list': term_related_list,
         })
 
 
@@ -94,10 +95,12 @@ class EditView(View):
 class HistoryView(View):
 
     def get(self, request, *args, **kwargs):
-        try:
-            term = Term.objects.get(id=kwargs.get('id'))
-        except Term.DoesNotExist:
-            return HttpResponse('존재하지 않는 아이디입니다.', status=404)
+        # try:
+        #     term = Term.objects.get(id=kwargs.get('id'))
+        # except Term.DoesNotExist:
+        #     return HttpResponse('존재하지 않는 아이디입니다.', status=404)
+
+        term = get_object_or_404(Term, id=kwargs.get('id'))
 
         revisions = TermRevision.objects.filter(term=term).order_by('-created_at')
 
