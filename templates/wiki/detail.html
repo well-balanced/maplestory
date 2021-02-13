@@ -14,7 +14,7 @@
     {% endfor %}
     </p>
     {% else %}
-        아직 설명이 없습니다.<br>
+        아직 설명이 없습니다. <a href="{% url 'edit' term.id %}">설명 추가하러 가기</a><br>
     {% endif %}
     <a href="{% url 'index' %}">index page</a><br>
     <a href="{% url 'edit' term.id %}">edit page</a><br>
