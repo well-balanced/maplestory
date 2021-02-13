@@ -14,7 +14,7 @@ class WriteView(View):
     def post(self, request, *args, **kwargs):
         term = request.POST.get('term', '')
         description = request.POST.get('description', '')
-        term_related = request.POST.getlist('tagList', '')
+        term_related = request.POST.getlist('tagList', [])
 
         if term == '':
             return HttpResponse('용어를 작성해주세요.', status=400)
@@ -74,21 +74,43 @@ class EditView(View):
     def get(self, request, *args, **kwargs):
         page_id = kwargs.get('id')
         term = Term.objects.get(id=page_id)
-        term_pointer = TermPointer.objects.get(term_id=page_id).term_revision_id
-        term_revision = TermRevision.objects.get(pk=term_pointer, term_id=page_id)
-        term_related = TermRelated.objects.get(term_id=page_id, term_revision_id=term_revision.id)
+        try:
+            term_pointer = TermPointer.objects.get(term=term)
+        except:
+            term_pointer = None
+
+        term_related_list = TermRelated.objects.filter(term_id=page_id)
         return render(request, 'wiki/edit.html', {
-            'id': page_id,
-            'term': term.name,
-            'description': term_revision.description,
-            'term_related': term_related.term_related
+            'term': term,
+            'term_pointer': term_pointer,
+            'term_related_list': term_related_list
         })
 
     def post(self, request, *args, **kwargs):
         page_id = kwargs.get('id')
+        term = Term.objects.get(id=page_id)
         description = request.POST.get('description', '')
+        term_related_list = request.POST.getlist('tagList', [])
+        
+        
+        for term_related in term_related_list:
+            new_term, _ = Term.objects.get_or_create(name=term_related)
+            TermRelated.objects.get_or_create(term=term, term_related=new_term)
+
+        get_term_related = TermRelated.objects.filter(term=term)
+
+        for x in get_term_related:
+            # if x.term_related.name in term_related_list:
+            #     pass
+            # else:
+            #     x.delete()
+            if x.term_related.name not in term_related_list:
+                x.delete()
+
         term_revision = TermRevision.objects.create(description=description, term_id=page_id)
-        TermPointer.objects.filter(term_id=page_id).update(term_revision_id=term_revision.id)
+        term_pointer, _ = TermPointer.objects.get_or_create(term_id=page_id)
+        term_pointer.term_revision_id = term_revision.id 
+        term_pointer.save()
         return redirect('/terms/{}'.format(page_id))
 
 

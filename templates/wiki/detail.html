@@ -8,13 +8,13 @@
     <h1>{{ term.name }}</h1>
     {% if term_revision %}
     <p>설명: {{ term_revision.description }}</p>
-    <p>연관용어: 
+    <p>연관어: 
     {% for x in term_related_list %}
         <a href="{% url 'detail' x.term_related.id %}">{{ x.term_related.name }}</a>
     {% endfor %}
     </p>
     {% else %}
-        아직 설명이 없습니다.<br>
+        아직 설명이 없습니다. <a href="{% url 'edit' term.id %}">설명 추가하러 가기</a><br>
     {% endif %}
     <a href="{% url 'index' %}">index page</a><br>
     <a href="{% url 'edit' term.id %}">edit page</a><br>
