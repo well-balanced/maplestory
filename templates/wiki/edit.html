@@ -5,10 +5,10 @@
 {% endblock %}
 
 {% block content %}
-  <form action="/terms/{{term_pointer.term.id}}/edit" method="POST">
+  <form action="/terms/{{term.id}}/edit" method="POST">
   {% csrf_token %}
     <div class="textbox">
-      <h1>{{ term_pointer.term.name }}</h1><br>
+      <h1>{{ term.name }}</h1><br>
       <textarea name="description">{{ term_pointer.term_revision.description }}</textarea><br>
     </div>
 
