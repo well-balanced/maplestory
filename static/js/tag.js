@@ -61,7 +61,7 @@ const csrftoken = getCookie('csrftoken');
 //         });
 //     } else if (checkSame.includes(task) === true) {
 //         taskBox.value = "";
-//         alert("중복된 태그입니다.");
+//         alert("중복된 연관어입니다.");
 //     }
 // }
 
