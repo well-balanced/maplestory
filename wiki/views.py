@@ -74,14 +74,11 @@ class EditView(View):
     def get(self, request, *args, **kwargs):
         page_id = kwargs.get('id')
         term = Term.objects.get(id=page_id)
-        term_pointer = TermPointer.objects.get(term_id=page_id).term_revision_id
-        term_revision = TermRevision.objects.get(pk=term_pointer, term_id=page_id)
-        term_related = TermRelated.objects.get(term_id=page_id, term_revision_id=term_revision.id)
+        term_pointer = TermPointer.objects.get(term=term)
+        term_related_list = TermRelated.objects.filter(term_id=page_id)
         return render(request, 'wiki/edit.html', {
-            'id': page_id,
-            'term': term.name,
-            'description': term_revision.description,
-            'term_related': term_related.term_related
+            'term_pointer': term_pointer,
+            'term_related_list': term_related_list
         })
 
     def post(self, request, *args, **kwargs):
