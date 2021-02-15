@@ -20,6 +20,6 @@ class TermPointer(models.Model):
 
 class TermRelated(models.Model):
     """ Term에 대한 관련 용어 ex) Term이 Python 이라면 TermRelated는 Django """
-    term_revision = models.ForeignKey(TermRevision, on_delete=models.CASCADE)
-    term = models.ForeignKey(Term, on_delete=models.CASCADE)
-    term_related = models.CharField(max_length=45, blank=True)
+    # term_revision = models.ForeignKey(TermRevision, on_delete=models.CASCADE)
+    term = models.ForeignKey(Term, on_delete=models.CASCADE, related_name="term")
+    term_related = models.ForeignKey(Term, on_delete=models.CASCADE, related_name="term_related")
