@@ -13,6 +13,20 @@
           "protocol": "tcp"
         }
       ],
+      "secrets": [
+        {
+          "name": "DB_USER",
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:414207599053:parameter/dbUser"
+        },
+        {
+          "name": "DB_HOST",
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:414207599053:parameter/dbHost"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:414207599053:parameter/dbPassword"
+        }
+      ],
       "essential": true
     }
   ],
