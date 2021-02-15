@@ -1,6 +1,6 @@
 from maplestory.settings import *
 
-DEBUG = False
+# DEBUG = False
 
 db_name = os.getenv('DB_NAME', 'showmethatcode')
 db_user = os.getenv('DB_USER')
