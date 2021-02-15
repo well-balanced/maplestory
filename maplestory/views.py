@@ -8,3 +8,4 @@ class IndexView(View):
         return render(request, 'index.html', {
             'terms': terms,
         })
+        

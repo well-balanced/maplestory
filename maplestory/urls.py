@@ -16,9 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .views import IndexView
+from django.http.response import HttpResponse
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name='index'),
     path('terms/', include('wiki.urls')),
+    path('health', lambda req: HttpResponse(status=200)),
 ]
