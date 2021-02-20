@@ -1,4 +1,4 @@
-from maplestory.settings import *
+from devwiki.settings import *
 
 # DEBUG = False
 
