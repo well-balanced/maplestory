@@ -1,23 +1,21 @@
-{% extends 'wiki/base.html' %}
-
-{% block head %}
-  <title>write</title>
-{% endblock %}
-
-{% block content %}
-  <form action="/terms/write" method="post">
+{% extends 'wiki/base.html' %} {% block head %}
+<title>write</title>
+{% endblock %} {% block content %}
+<form action="/terms/write" method="post">
   {% csrf_token %}
-    <div class="textbox">
-      <textarea name="term" placeholder="용어"></textarea><br>
-      <textarea name="description" placeholder="설명"></textarea><br>
-    </div>
-      <div id='ui-widget'>
-        <input class="form-control" placeholder="연관어 목록" id="text_task"/>
-        <button type="button" id="btn_add_task" class="btn btn-primary">추가</button>
-      </div>
-      <ul id="list_tasks"></ul>
-    <div class="submit">
-        <button type="submit">작성</button>
-    </div>
-  </form>
+  <div class="textbox">
+    <textarea name="term" placeholder="용어"></textarea><br />
+    <textarea id="MyID" name="description"></textarea><br />
+  </div>
+  <div id="ui-widget">
+    <input class="form-control" placeholder="연관어 목록" id="text_task" />
+    <button type="button" id="btn_add_task" class="btn btn-primary">
+      추가
+    </button>
+  </div>
+  <ul id="list_tasks"></ul>
+  <div class="submit">
+    <button type="submit">작성</button>
+  </div>
+</form>
 {% endblock %}
